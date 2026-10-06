@@ -38,7 +38,8 @@ import {
   DollarSign,
   PieChart,
   Calendar,
-  Sparkles
+  Sparkles,
+  Menu
 } from 'lucide-react';
 
 // Mock Data Definitions
@@ -210,6 +211,7 @@ export default function App() {
   const [toastMessage, setToastMessage] = useState(null);
   const [selectedAssetDetail, setSelectedAssetDetail] = useState(null);
   const [showArchModal, setShowArchModal] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Helper Toast Alert Trigger
   const triggerToast = (msg) => {
@@ -217,6 +219,11 @@ export default function App() {
     setTimeout(() => {
       setToastMessage(null);
     }, 4500);
+  };
+
+  const handleNav = (tabId) => {
+    setActiveTab(tabId);
+    setMobileMenuOpen(false);
   };
 
   // Central Work Order Creator from AI Copilot
@@ -238,8 +245,151 @@ export default function App() {
 
   return (
     <div className="flex h-screen bg-slate-50 font-sans text-slate-800 overflow-hidden">
-      {/* Dark Navy Sidebar */}
-      <aside className="w-64 bg-slate-900 text-slate-300 flex flex-col z-20 shrink-0 border-r border-slate-800">
+      {/* Mobile Off-Canvas Drawer Navigation */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 md:hidden flex">
+          <div
+            className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm transition-opacity"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          <aside className="relative w-4/5 max-w-xs bg-slate-900 text-slate-300 flex flex-col h-full z-10 shadow-2xl border-r border-slate-800 animate-slide-up">
+            {/* Drawer Logo */}
+            <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                  <Zap className="w-4 h-4 fill-current" />
+                </div>
+                <div>
+                  <h1 className="font-bold text-white tracking-wide text-sm leading-tight">LiveGrid</h1>
+                  <p className="text-[9px] text-indigo-400 font-medium tracking-wider uppercase">Energy CRM & AI</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                aria-label="Close Navigation Menu"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Navigation Sections */}
+            <div className="flex-1 overflow-y-auto py-3 px-3 space-y-5 text-xs touch-scroll">
+              <div>
+                <p className="px-3 text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Overview</p>
+                <nav className="space-y-1">
+                  <NavItem
+                    id="dashboard"
+                    icon={<LayoutDashboard className="w-4 h-4" />}
+                    label="Dashboard"
+                    activeTab={activeTab}
+                    setActiveTab={handleNav}
+                  />
+                </nav>
+              </div>
+
+              <div>
+                <p className="px-3 text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Customer Operations</p>
+                <nav className="space-y-1">
+                  <NavItem
+                    id="customers"
+                    icon={<Users className="w-4 h-4" />}
+                    label="Customers"
+                    activeTab={activeTab}
+                    setActiveTab={handleNav}
+                  />
+                  <NavItem
+                    id="assets"
+                    icon={<Cpu className="w-4 h-4" />}
+                    label="Energy Assets"
+                    activeTab={activeTab}
+                    setActiveTab={handleNav}
+                  />
+                  <NavItem
+                    id="live-monitoring"
+                    icon={<Activity className="w-4 h-4" />}
+                    label="Live Monitoring"
+                    activeTab={activeTab}
+                    setActiveTab={handleNav}
+                  />
+                </nav>
+              </div>
+
+              <div>
+                <p className="px-3 text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Intelligence</p>
+                <nav className="space-y-1">
+                  <NavItem
+                    id="ai-copilot"
+                    icon={<Bot className="w-4 h-4" />}
+                    label="AI Copilot"
+                    badge="Anomalies"
+                    activeTab={activeTab}
+                    setActiveTab={handleNav}
+                  />
+                  <NavItem
+                    id="predictive-maintenance"
+                    icon={<Wrench className="w-4 h-4" />}
+                    label="Predictive Maintenance"
+                    activeTab={activeTab}
+                    setActiveTab={handleNav}
+                  />
+                </nav>
+              </div>
+
+              <div>
+                <p className="px-3 text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Operations</p>
+                <nav className="space-y-1">
+                  <NavItem
+                    id="field-service"
+                    icon={<ClipboardList className="w-4 h-4" />}
+                    label="Field Service & Tickets"
+                    count={tickets.length}
+                    activeTab={activeTab}
+                    setActiveTab={handleNav}
+                  />
+                </nav>
+              </div>
+
+              <div>
+                <p className="px-3 text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Renewable Energy</p>
+                <nav className="space-y-1">
+                  <NavItem
+                    id="clean-programs"
+                    icon={<Sun className="w-4 h-4" />}
+                    label="Clean Energy Programs"
+                    activeTab={activeTab}
+                    setActiveTab={handleNav}
+                  />
+                  <NavItem
+                    id="energy-reports"
+                    icon={<BarChart3 className="w-4 h-4" />}
+                    label="Energy Reports"
+                    activeTab={activeTab}
+                    setActiveTab={handleNav}
+                  />
+                </nav>
+              </div>
+            </div>
+
+            {/* System Architecture Button in Mobile Drawer */}
+            <div className="p-3 border-t border-slate-800 bg-slate-950/70 safe-area-bottom">
+              <button
+                onClick={() => {
+                  setShowArchModal(true);
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full flex items-center justify-center gap-2 py-2 px-3 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 rounded-lg text-xs font-medium border border-indigo-500/30 transition-colors"
+              >
+                <Info className="w-4 h-4" />
+                <span>System Architecture Info</span>
+              </button>
+            </div>
+          </aside>
+        </div>
+      )}
+
+      {/* Desktop Dark Navy Sidebar (Hidden on Mobile < md) */}
+      <aside className="hidden md:flex md:w-64 bg-slate-900 text-slate-300 flex-col z-20 shrink-0 border-r border-slate-800">
         {/* Logo Banner */}
         <div className="p-4 border-b border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -374,18 +524,38 @@ export default function App() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between z-10 shrink-0">
-          <div className="flex items-center gap-3">
-            <h2 className="text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
+        <header className="h-14 sm:h-16 bg-white border-b border-slate-200 px-3.5 sm:px-6 flex items-center justify-between z-10 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Mobile Hamburger Menu Toggle */}
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="md:hidden p-2 -ml-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              aria-label="Open Navigation Menu"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+
+            {/* Mobile Brand Title */}
+            <div className="flex md:hidden items-center gap-1.5">
+              <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-sm">
+                <Zap className="w-4 h-4 fill-current" />
+              </div>
+              <span className="font-bold text-slate-900 text-sm tracking-tight">LiveGrid</span>
+            </div>
+
+            {/* Desktop Brand Title */}
+            <h2 className="hidden md:flex text-lg font-bold text-slate-900 tracking-tight items-center gap-2">
               <span>LiveGrid Energy CRM</span>
             </h2>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              LIVE TELEMETRY ACTIVE
+
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+              <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="hidden sm:inline">LIVE TELEMETRY ACTIVE</span>
+              <span className="sm:hidden">LIVE</span>
             </span>
           </div>
 
-          {/* System Step-by-Step Flow Bar */}
+          {/* System Step-by-Step Flow Bar (Desktop) */}
           <div className="hidden lg:flex items-center gap-2 bg-slate-100 p-1.5 rounded-lg border border-slate-200 text-xs">
             <span className="font-semibold text-slate-500 px-2">Flow:</span>
             <button
@@ -425,19 +595,23 @@ export default function App() {
             </button>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <div className="text-right hidden sm:block">
               <p className="text-xs font-bold text-slate-800">Monus Kumar</p>
               <p className="text-[11px] text-indigo-600 font-medium">System Administrator</p>
             </div>
-            <div className="w-8 h-8 rounded-full bg-indigo-600 border border-indigo-500 flex items-center justify-center font-bold text-white text-xs shadow-sm">
+            <button
+              onClick={() => setShowArchModal(true)}
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-indigo-600 border border-indigo-500 flex items-center justify-center font-bold text-white text-xs shadow-sm hover:ring-2 hover:ring-indigo-400 transition-all"
+              title="System Architecture & Info"
+            >
               MK
-            </div>
+            </button>
           </div>
         </header>
 
-        {/* Dynamic Canvas Area */}
-        <main className="flex-1 overflow-y-auto p-6 bg-slate-50/50">
+        {/* Dynamic Canvas Area (With Mobile Bottom Navigation Clearance) */}
+        <main className="flex-1 overflow-y-auto p-3.5 sm:p-6 pb-24 md:pb-6 bg-slate-50/50 touch-scroll">
           {activeTab === 'dashboard' && <DashboardView setActiveTab={setActiveTab} />}
           {activeTab === 'customers' && <CustomersView />}
           {activeTab === 'assets' && (
@@ -460,9 +634,76 @@ export default function App() {
         </main>
       </div>
 
+      {/* Mobile Bottom Navigation Bar (Smartphones & Tablets < md) */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 text-slate-400 safe-area-bottom shadow-2xl">
+        <div className="grid grid-cols-5 h-14 sm:h-16 items-center px-1">
+          <button
+            onClick={() => handleNav('dashboard')}
+            className={`flex flex-col items-center justify-center py-1 rounded-lg transition-all ${
+              activeTab === 'dashboard' ? 'text-indigo-400 font-bold' : 'hover:text-slate-200'
+            }`}
+          >
+            <LayoutDashboard className="w-5 h-5" />
+            <span className="text-[10px] mt-1 leading-none">Home</span>
+          </button>
+
+          <button
+            onClick={() => handleNav('live-monitoring')}
+            className={`flex flex-col items-center justify-center py-1 rounded-lg transition-all relative ${
+              activeTab === 'live-monitoring' ? 'text-indigo-400 font-bold' : 'hover:text-slate-200'
+            }`}
+          >
+            <div className="relative">
+              <Activity className="w-5 h-5" />
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500"></span>
+            </div>
+            <span className="text-[10px] mt-1 leading-none">Live</span>
+          </button>
+
+          <button
+            onClick={() => handleNav('ai-copilot')}
+            className={`flex flex-col items-center justify-center py-1 rounded-lg transition-all relative ${
+              activeTab === 'ai-copilot' ? 'text-indigo-400 font-bold' : 'hover:text-slate-200'
+            }`}
+          >
+            <div className="relative p-1 rounded-full bg-indigo-600/20 border border-indigo-500/40">
+              <Bot className="w-5 h-5 text-indigo-400" />
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-rose-500"></span>
+            </div>
+            <span className="text-[10px] mt-0.5 leading-none">Copilot</span>
+          </button>
+
+          <button
+            onClick={() => handleNav('field-service')}
+            className={`flex flex-col items-center justify-center py-1 rounded-lg transition-all relative ${
+              activeTab === 'field-service' ? 'text-indigo-400 font-bold' : 'hover:text-slate-200'
+            }`}
+          >
+            <div className="relative">
+              <ClipboardList className="w-5 h-5" />
+              {tickets.length > 0 && (
+                <span className="absolute -top-1 -right-2 px-1 py-0.2 bg-rose-500 text-white rounded-full text-[9px] font-bold font-mono">
+                  {tickets.length}
+                </span>
+              )}
+            </div>
+            <span className="text-[10px] mt-1 leading-none">Tickets</span>
+          </button>
+
+          <button
+            onClick={() => setMobileMenuOpen(true)}
+            className="flex flex-col items-center justify-center py-1 rounded-lg hover:text-slate-200 transition-all text-slate-400"
+          >
+            <Menu className="w-5 h-5" />
+            <span className="text-[10px] mt-1 leading-none">Menu</span>
+          </button>
+        </div>
+      </nav>
+
       {/* Toast Notification Container */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl border border-indigo-500/40 flex items-center gap-3 animate-slide-up max-w-md">
+        <div className="fixed bottom-20 md:bottom-6 left-4 right-4 md:left-auto md:right-6 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl border border-indigo-500/40 flex items-center gap-3 animate-slide-up max-w-md">
           <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
           <p className="text-xs text-slate-200 font-medium leading-tight">{toastMessage}</p>
         </div>
@@ -513,18 +754,18 @@ function NavItem({ id, icon, label, badge, count, activeTab, setActiveTab }) {
 // 1. DASHBOARD VIEW
 function DashboardView({ setActiveTab }) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       {/* View Title */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Energy Operations Dashboard</h2>
-          <p className="text-xs text-slate-500">
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Energy Operations Dashboard</h2>
+          <p className="text-xs text-slate-500 mt-0.5">
             Enterprise CRM + IoT Energy Management + AI Decision Support Layer
           </p>
         </div>
         <button
           onClick={() => setActiveTab('ai-copilot')}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-lg text-xs font-semibold shadow-md shadow-indigo-500/20 hover:from-indigo-500 hover:to-indigo-600 transition-all self-start md:self-auto"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-lg text-xs font-semibold shadow-md shadow-indigo-500/20 hover:from-indigo-500 hover:to-indigo-600 transition-all w-full sm:w-auto"
         >
           <Bot className="w-4 h-4" />
           <span>Launch AI Energy Copilot</span>
@@ -532,7 +773,7 @@ function DashboardView({ setActiveTab }) {
       </div>
 
       {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <KpiCard
           title="Active Customers"
           value="1,284"
@@ -565,26 +806,26 @@ function DashboardView({ setActiveTab }) {
       </div>
 
       {/* Main Dashboard Visuals Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6">
         {/* Solar Generation Today Chart Card */}
-        <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-          <div className="flex items-center justify-between mb-4">
+        <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5 mb-4">
             <div>
               <h3 className="font-bold text-slate-900 text-sm">Solar Generation Profile Today (kW)</h3>
               <p className="text-[11px] text-slate-500">Real-time aggregate sensor feed vs target baseline</p>
             </div>
             <div className="flex items-center gap-3 text-xs">
               <span className="flex items-center gap-1.5 text-slate-600">
-                <span className="w-3 h-3 rounded-full bg-indigo-600"></span> Actual kW
+                <span className="w-2.5 h-2.5 rounded-full bg-indigo-600"></span> Actual kW
               </span>
               <span className="flex items-center gap-1.5 text-slate-600">
-                <span className="w-3 h-3 rounded-full bg-slate-300"></span> Expected baseline
+                <span className="w-2.5 h-2.5 rounded-full bg-slate-300"></span> Expected baseline
               </span>
             </div>
           </div>
 
           {/* SVG Line Chart */}
-          <div className="h-64 w-full relative">
+          <div className="h-52 sm:h-64 w-full relative select-none">
             <svg className="w-full h-full overflow-visible" viewBox="0 0 500 200">
               {/* Background Horizontal Grid Lines */}
               {[0, 50, 100, 150].map((y, i) => (
@@ -624,14 +865,14 @@ function DashboardView({ setActiveTab }) {
             </svg>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+          <div className="mt-4 pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs text-slate-500">
             <span>Peak Solar Generation: <strong>230 kW @ 12:00 PM</strong></span>
-            <span>AI Efficiency Rating: <strong className="text-emerald-600">92.4% Optimal</strong></span>
+            <span>AI Efficiency Rating: <strong className="text-emerald-600 font-semibold">92.4% Optimal</strong></span>
           </div>
         </div>
 
         {/* Asset Health Card */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-col justify-between">
+        <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-bold text-slate-900 text-sm">Fleet Asset Health</h3>
@@ -646,7 +887,7 @@ function DashboardView({ setActiveTab }) {
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-slate-100 bg-amber-50/60 rounded-lg p-3 border border-amber-200/60">
+          <div className="mt-5 pt-3.5 border-t border-slate-100 bg-amber-50/70 rounded-lg p-3 border border-amber-200/60">
             <div className="flex items-start gap-2.5">
               <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
               <div>
@@ -670,13 +911,13 @@ function DashboardView({ setActiveTab }) {
 // KPI Card Helper
 function KpiCard({ title, value, subText, icon, bgColor, alert }) {
   return (
-    <div className={`bg-white rounded-xl border ${alert ? 'border-rose-200' : 'border-slate-200'} p-5 shadow-sm flex items-start justify-between`}>
+    <div className={`bg-white rounded-xl border ${alert ? 'border-rose-200' : 'border-slate-200'} p-4 sm:p-5 shadow-sm flex items-start justify-between`}>
       <div>
         <p className="text-xs font-medium text-slate-500">{title}</p>
-        <h3 className="text-2xl font-extrabold text-slate-900 mt-1 tracking-tight">{value}</h3>
+        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1 tracking-tight">{value}</h3>
         <p className={`text-[11px] mt-1 font-medium ${alert ? 'text-rose-600' : 'text-slate-500'}`}>{subText}</p>
       </div>
-      <div className={`p-2.5 rounded-lg ${bgColor}`}>{icon}</div>
+      <div className={`p-2.5 rounded-lg ${bgColor} shrink-0`}>{icon}</div>
     </div>
   );
 }
@@ -740,20 +981,20 @@ function AiCopilotView({ createAiTicket, setActiveTab }) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       {/* Title */}
       <div>
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-          <Bot className="w-6 h-6 text-indigo-600" />
+        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+          <Bot className="w-6 h-6 text-indigo-600 shrink-0" />
           <span>AI Energy Copilot</span>
         </h2>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-slate-500 mt-0.5">
           Turn continuous energy data into predictive decisions, automated service workflows, and instant intelligence.
         </p>
       </div>
 
       {/* CORE ANOMALY BANNER */}
-      <div className="bg-gradient-to-r from-rose-900 via-slate-900 to-indigo-950 text-white rounded-xl p-5 shadow-lg relative overflow-hidden border border-rose-800/50">
+      <div className="bg-gradient-to-r from-rose-900 via-slate-900 to-indigo-950 text-white rounded-xl p-4 sm:p-5 shadow-lg relative overflow-hidden border border-rose-800/50">
         <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-rose-600/10 to-transparent pointer-events-none"></div>
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
@@ -762,24 +1003,24 @@ function AiCopilotView({ createAiTicket, setActiveTab }) {
               <ShieldAlert className="w-6 h-6 animate-pulse" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs font-bold uppercase tracking-wider bg-rose-500/30 text-rose-200 px-2 py-0.5 rounded border border-rose-400/30">
                   Critical Anomaly Flagged
                 </span>
                 <span className="text-xs text-slate-400 font-mono">Confidence: 91%</span>
               </div>
-              <h3 className="text-lg font-bold text-white mt-1">INV-204 Solar Inverter Thermal Overheating</h3>
-              <p className="text-xs text-slate-300 mt-0.5 max-w-xl">
+              <h3 className="text-base sm:text-lg font-bold text-white mt-1">INV-204 Solar Inverter Thermal Overheating</h3>
+              <p className="text-xs text-slate-300 mt-0.5 max-w-xl leading-relaxed">
                 Operating at <strong className="text-amber-300">78°C</strong> (Normal Range: 62–70°C). Output generated is{' '}
                 <strong className="text-amber-300">182 kW</strong> vs <strong className="text-emerald-300">237 kW</strong> expected baseline (-23% deviation).
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
             <button
               onClick={() => createAiTicket('INV-204', 'AI-detected thermal stress (78°C) & 23% output deviation')}
-              className="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-lg text-xs shadow-md shadow-rose-900/50 flex items-center gap-1.5 transition-all"
+              className="w-full sm:w-auto justify-center px-4 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-lg text-xs shadow-md shadow-rose-900/50 flex items-center gap-1.5 transition-all"
             >
               <Plus className="w-4 h-4" />
               <span>Create Service Ticket</span>
@@ -788,8 +1029,8 @@ function AiCopilotView({ createAiTicket, setActiveTab }) {
         </div>
       </div>
 
-      {/* Copilot Mode Selection Buttons */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-3">
+      {/* Copilot Mode Selection Buttons (Horizontal swipe on Mobile) */}
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-3 overflow-x-auto no-scrollbar flex-nowrap sm:flex-wrap">
         <CopilotTabBtn
           id="analyze"
           label="Analyze Asset"
@@ -821,14 +1062,14 @@ function AiCopilotView({ createAiTicket, setActiveTab }) {
       </div>
 
       {/* Dynamic Copilot Action Content */}
-      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+      <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 shadow-sm">
         {activeCopilotTab === 'analyze' && (
           <div className="space-y-4">
             <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
               <Search className="w-4 h-4 text-indigo-600" />
               <span>Deep Inverter Anomaly Diagnostic</span>
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 font-mono text-xs">
               <div className="p-3 bg-slate-50 rounded-lg border border-slate-200">
                 <span className="text-slate-500 block text-[10px]">CURRENT TEMPERATURE</span>
                 <span className="text-lg font-bold text-rose-600">78°C</span>
@@ -846,7 +1087,7 @@ function AiCopilotView({ createAiTicket, setActiveTab }) {
               </div>
             </div>
 
-            <div className="bg-slate-50 rounded-lg p-4 text-xs space-y-2 border border-slate-200">
+            <div className="bg-slate-50 rounded-lg p-3.5 sm:p-4 text-xs space-y-2 border border-slate-200">
               <p className="font-semibold text-slate-800">AI Root Cause Analysis:</p>
               <ul className="list-disc list-inside space-y-1 text-slate-600">
                 <li>Primary cooling fan intake restriction or dust filter clogging.</li>
@@ -889,7 +1130,7 @@ function AiCopilotView({ createAiTicket, setActiveTab }) {
             <div className="pt-2">
               <button
                 onClick={() => createAiTicket('INV-204', 'Predictive Maintenance: High failure probability in 7-14 days')}
-                className="px-4 py-2 bg-indigo-600 text-white font-bold rounded-lg text-xs hover:bg-indigo-700 transition-all flex items-center gap-2"
+                className="w-full sm:w-auto justify-center px-4 py-2.5 bg-indigo-600 text-white font-bold rounded-lg text-xs hover:bg-indigo-700 transition-all flex items-center gap-2"
               >
                 <Plus className="w-4 h-4" />
                 <span>Dispatch Work Order Now</span>
@@ -905,7 +1146,7 @@ function AiCopilotView({ createAiTicket, setActiveTab }) {
               <span>Tomorrow’s Energy Generation Forecast</span>
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-xs font-mono">
               <div className="p-3 bg-indigo-50 border border-indigo-200 rounded-lg">
                 <span className="text-indigo-600 block text-[10px]">PREDICTED GENERATION</span>
                 <span className="text-xl font-bold text-indigo-900">21.3 MWh</span>
@@ -934,14 +1175,14 @@ function AiCopilotView({ createAiTicket, setActiveTab }) {
             </h3>
 
             {/* Chat Box History */}
-            <div className="h-56 overflow-y-auto bg-slate-50 rounded-lg p-4 border border-slate-200 space-y-3">
+            <div className="h-60 sm:h-64 overflow-y-auto bg-slate-50 rounded-lg p-3.5 sm:p-4 border border-slate-200 space-y-3 touch-scroll">
               {chatMessages.map((msg, index) => (
                 <div
                   key={index}
                   className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-lg rounded-xl px-4 py-2.5 text-xs ${
+                    className={`max-w-[85%] sm:max-w-lg rounded-xl px-3.5 py-2.5 text-xs ${
                       msg.sender === 'user'
                         ? 'bg-indigo-600 text-white rounded-br-none'
                         : 'bg-white text-slate-800 border border-slate-200 rounded-bl-none shadow-sm'
@@ -957,14 +1198,14 @@ function AiCopilotView({ createAiTicket, setActiveTab }) {
             <form onSubmit={handleSendChat} className="flex gap-2">
               <input
                 type="text"
-                placeholder="Ask e.g.: 'Why was my solar generation lower this week?'"
+                placeholder="Ask e.g.: 'Why was solar generation lower this week?'"
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
                 className="flex-1 bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800"
               />
               <button
                 type="submit"
-                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                className="px-3.5 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors shrink-0"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>Ask AI</span>
@@ -983,7 +1224,7 @@ function CopilotTabBtn({ id, label, icon, active, setActive }) {
   return (
     <button
       onClick={() => setActive(id)}
-      className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all ${
+      className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold shrink-0 whitespace-nowrap transition-all ${
         isActive
           ? 'bg-indigo-600 text-white shadow-sm'
           : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
@@ -1007,16 +1248,16 @@ function CustomersView() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Customer Relationship Management</h2>
-        <p className="text-xs text-slate-500">
+        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Customer Relationship Management</h2>
+        <p className="text-xs text-slate-500 mt-0.5">
           Linking customer profiles directly with linked renewable energy assets & SCADA telemetry.
         </p>
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="bg-white rounded-xl border border-slate-200 p-3.5 sm:p-4 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
         <div className="relative w-full sm:w-72">
           <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
           <input
@@ -1024,16 +1265,16 @@ function CustomersView() {
             placeholder="Search customers or ID..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full pl-9 pr-3 py-2 sm:py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Filter className="w-4 h-4 text-slate-400" />
+          <Filter className="w-4 h-4 text-slate-400 shrink-0" />
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="bg-slate-50 border border-slate-300 rounded-lg text-xs py-1.5 px-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full sm:w-auto bg-slate-50 border border-slate-300 rounded-lg text-xs py-2 sm:py-1.5 px-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             <option value="All">All Customer Types</option>
             <option value="Residential">Residential</option>
@@ -1045,8 +1286,8 @@ function CustomersView() {
 
       {/* Customer Data Table */}
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+        <div className="overflow-x-auto touch-scroll">
+          <table className="w-full text-left text-xs min-w-[640px]">
             <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-semibold">
               <tr>
                 <th className="p-3.5">Customer</th>
@@ -1103,20 +1344,20 @@ function CustomersView() {
 // 4. ENERGY ASSETS VIEW
 function AssetsView({ onSelectAsset, selectedAsset, onCloseDetail }) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Fleet Asset Management</h2>
-        <p className="text-xs text-slate-500">
+        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Fleet Asset Management</h2>
+        <p className="text-xs text-slate-500 mt-0.5">
           Connected solar panels, inverters, microgrid batteries, and smart meters.
         </p>
       </div>
 
       {/* Asset Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {ASSETS.map((asset) => (
           <div
             key={asset.id}
-            className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
+            className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center justify-between mb-2">
@@ -1159,7 +1400,7 @@ function AssetsView({ onSelectAsset, selectedAsset, onCloseDetail }) {
 
             <button
               onClick={() => onSelectAsset(asset)}
-              className="mt-4 w-full py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1"
+              className="mt-4 w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1"
             >
               <span>View Asset Details</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -1170,11 +1411,12 @@ function AssetsView({ onSelectAsset, selectedAsset, onCloseDetail }) {
 
       {/* Asset Detail Modal */}
       {selectedAsset && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl border border-slate-200 max-w-lg w-full p-6 shadow-2xl relative space-y-4">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-xl border border-slate-200 max-w-lg w-full p-4 sm:p-6 shadow-2xl relative space-y-4 max-h-[90vh] overflow-y-auto">
             <button
               onClick={onCloseDetail}
-              className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 p-1"
+              className="absolute right-3 sm:right-4 top-3 sm:top-4 text-slate-400 hover:text-slate-600 p-1 rounded-lg"
+              aria-label="Close dialog"
             >
               <X className="w-5 h-5" />
             </button>
@@ -1183,15 +1425,15 @@ function AssetsView({ onSelectAsset, selectedAsset, onCloseDetail }) {
               <span className="text-xs font-mono font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded">
                 {selectedAsset.id}
               </span>
-              <h3 className="text-lg font-bold text-slate-900 mt-1">{selectedAsset.name}</h3>
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 mt-1">{selectedAsset.name}</h3>
               <p className="text-xs text-slate-500">{selectedAsset.location}</p>
             </div>
 
-            <div className="bg-slate-50 rounded-lg p-4 text-xs font-mono space-y-2 border border-slate-200">
+            <div className="bg-slate-50 rounded-lg p-3.5 sm:p-4 text-xs font-mono space-y-2 border border-slate-200">
               <p className="font-bold text-slate-700 font-sans">Live Asset Operational Telemetry:</p>
               {Object.entries(selectedAsset.metrics).map(([key, val]) => (
                 <div key={key} className="flex justify-between py-1 border-b border-slate-200/60 last:border-none">
-                  <span className="text-slate-500 uppercase">{key}:</span>
+                  <span className="text-slate-500 uppercase text-[11px]">{key}:</span>
                   <span className="font-bold text-slate-800">{val}</span>
                 </div>
               ))}
@@ -1200,7 +1442,7 @@ function AssetsView({ onSelectAsset, selectedAsset, onCloseDetail }) {
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={onCloseDetail}
-                className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-lg transition-colors"
+                className="w-full sm:w-auto px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-lg transition-colors"
               >
                 Close
               </button>
@@ -1224,24 +1466,24 @@ function LiveMonitoringView({ setActiveTab }) {
   }, []);
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+    <div className="space-y-5 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            <Activity className="w-6 h-6 text-emerald-600 animate-pulse" />
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+            <Activity className="w-6 h-6 text-emerald-600 animate-pulse shrink-0" />
             <span>Live Energy Monitoring</span>
           </h2>
-          <p className="text-xs text-slate-500">Real-time IoT/SCADA sensor stream updates every 2 seconds.</p>
+          <p className="text-xs text-slate-500 mt-0.5">Real-time IoT/SCADA sensor stream updates every 2 seconds.</p>
         </div>
 
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 self-start sm:self-auto">
+        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-mono font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 self-start sm:self-auto">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-          STREAMING TELEMETRY TICK: #{1420 + liveSec}
+          STREAMING TICK: #{1420 + liveSec}
         </span>
       </div>
 
       {/* Live Metrics Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 font-mono">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3 font-mono">
         <LiveMetricWidget label="Solar Output" value={`${182 + (liveSec % 3)} kW`} icon={<Sun className="w-4 h-4 text-amber-500" />} />
         <LiveMetricWidget label="Grid Import" value={`${46 - (liveSec % 2)} kW`} icon={<Zap className="w-4 h-4 text-indigo-600" />} />
         <LiveMetricWidget label="Battery SOC" value="82%" icon={<BatteryCharging className="w-4 h-4 text-emerald-600" />} />
@@ -1256,17 +1498,17 @@ function LiveMonitoringView({ setActiveTab }) {
       </div>
 
       {/* Anomaly Workflow Banner */}
-      <div className="bg-indigo-900 text-white p-5 rounded-xl border border-indigo-700 flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg">
+      <div className="bg-indigo-900 text-white p-4 sm:p-5 rounded-xl border border-indigo-700 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-4 shadow-lg">
         <div>
           <span className="text-[10px] uppercase font-bold tracking-wider text-indigo-300">Operational Anomaly Flagged</span>
-          <h3 className="text-base font-bold text-white mt-0.5">Flagged Asset: Solar Inverter INV-204 Thermal Anomaly</h3>
-          <p className="text-xs text-indigo-200 mt-0.5">
+          <h3 className="text-sm sm:text-base font-bold text-white mt-0.5">Flagged Asset: Solar Inverter INV-204 Thermal Anomaly</h3>
+          <p className="text-xs text-indigo-200 mt-0.5 leading-relaxed">
             Notice Inverter Temperature is elevated at 78°C. Proceed to AI Copilot to analyze root causes.
           </p>
         </div>
         <button
           onClick={() => setActiveTab('ai-copilot')}
-          className="px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white font-bold text-xs rounded-lg shadow transition-all shrink-0 flex items-center gap-2"
+          className="w-full md:w-auto justify-center px-4 py-2.5 bg-indigo-500 hover:bg-indigo-400 text-white font-bold text-xs rounded-lg shadow transition-all shrink-0 flex items-center gap-2"
         >
           <span>Open AI Copilot</span>
           <ArrowRight className="w-4 h-4" />
@@ -1278,12 +1520,12 @@ function LiveMonitoringView({ setActiveTab }) {
 
 function LiveMetricWidget({ label, value, icon, alert }) {
   return (
-    <div className={`p-4 rounded-xl bg-white border ${alert ? 'border-rose-300 bg-rose-50/20' : 'border-slate-200'} shadow-sm`}>
-      <div className="flex items-center justify-between text-slate-500 mb-2">
+    <div className={`p-3.5 sm:p-4 rounded-xl bg-white border ${alert ? 'border-rose-300 bg-rose-50/20' : 'border-slate-200'} shadow-sm`}>
+      <div className="flex items-center justify-between text-slate-500 mb-1.5 sm:mb-2">
         <span className="text-[10px] font-sans uppercase font-bold text-slate-400">{label}</span>
         {icon}
       </div>
-      <p className={`text-lg font-extrabold ${alert ? 'text-rose-600' : 'text-slate-900'}`}>{value}</p>
+      <p className={`text-base sm:text-lg font-extrabold ${alert ? 'text-rose-600' : 'text-slate-900'}`}>{value}</p>
     </div>
   );
 }
@@ -1291,23 +1533,23 @@ function LiveMetricWidget({ label, value, icon, alert }) {
 // 6. FIELD SERVICE VIEW
 function FieldServiceView({ tickets }) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Field Service & Work Orders</h2>
-        <p className="text-xs text-slate-500">
+        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Field Service & Work Orders</h2>
+        <p className="text-xs text-slate-500 mt-0.5">
           Automated dispatch tickets generated via AI Energy Copilot anomaly predictions.
         </p>
       </div>
 
       {/* Service Tickets Table */}
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+        <div className="p-3.5 sm:p-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
           <h3 className="font-bold text-slate-900 text-sm">Active Service Tickets ({tickets.length})</h3>
           <span className="text-xs text-slate-500">Auto-synced with CRM Field Operations</span>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+        <div className="overflow-x-auto touch-scroll">
+          <table className="w-full text-left text-xs min-w-[660px]">
             <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-semibold">
               <tr>
                 <th className="p-3.5">Ticket ID</th>
@@ -1368,13 +1610,13 @@ function FieldServiceView({ tickets }) {
 // 7. CLEAN ENERGY PROGRAMS VIEW
 function CleanProgramsView() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Clean Energy & Sustainability Programs</h2>
-        <p className="text-xs text-slate-500">Track customer enrollment, EV infrastructure, and carbon offset benchmarks.</p>
+        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Clean Energy & Sustainability Programs</h2>
+        <p className="text-xs text-slate-500 mt-0.5">Track customer enrollment, EV infrastructure, and carbon offset benchmarks.</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <KpiCard title="Solar Adoption Rate" value="68%" subText="873 enrolled homes" icon={<Sun className="w-5 h-5 text-amber-500" />} bgColor="bg-amber-50" />
         <KpiCard title="EV Charging Hubs" value="42" subText="Connected to microgrid" icon={<Zap className="w-5 h-5 text-indigo-600" />} bgColor="bg-indigo-50" />
         <KpiCard title="CO₂ Avoided Today" value="9.4 Tonnes" subText="Equivalent to 420 trees" icon={<CheckCircle2 className="w-5 h-5 text-emerald-600" />} bgColor="bg-emerald-50" />
@@ -1438,12 +1680,12 @@ function EnergyReportsView({ triggerToast }) {
   const chartHeight = 190;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       {/* Top Header & Export Controls */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            <BarChart3 className="w-6 h-6 text-indigo-600" />
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+            <BarChart3 className="w-6 h-6 text-indigo-600 shrink-0" />
             <span>Energy Analytics & Operational Reports</span>
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
@@ -1451,7 +1693,7 @@ function EnergyReportsView({ triggerToast }) {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
           {/* Timeframe Switcher */}
           <div className="bg-white border border-slate-200 rounded-lg p-1 flex items-center shadow-sm text-xs font-semibold">
             <button
@@ -1497,7 +1739,7 @@ function EnergyReportsView({ triggerToast }) {
       </div>
 
       {/* Top 4 KPI Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <KpiCard
           title="Total Energy Generated"
           value={timeRange === '7d' ? '339.6 MWh' : '7.88 GWh'}
@@ -1529,30 +1771,30 @@ function EnergyReportsView({ triggerToast }) {
       </div>
 
       {/* PRIMARY INTERACTIVE GRAPH CONTAINER */}
-      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-5">
+      <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 shadow-sm space-y-4 sm:space-y-5">
         {/* Chart Navigation Tabs & Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-100 pb-4">
           <div>
-            <div className="flex items-center gap-2">
-              <h3 className="font-bold text-slate-900 text-base">
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="font-bold text-slate-900 text-sm sm:text-base">
                 {chartType === 'generation' && 'Renewable Energy Generation Profile (MWh)'}
                 {chartType === 'balance' && 'Energy Generation vs Customer Consumption Balance'}
                 {chartType === 'efficiency' && 'Fleet Performance Ratio (PR%) & Efficiency Curve'}
               </h3>
-              <span className="text-[11px] font-mono font-semibold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded border border-indigo-200">
+              <span className="text-[10px] sm:text-[11px] font-mono font-semibold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded border border-indigo-200">
                 {timeRange === '7d' ? 'Daily Aggregates' : 'Monthly Historical Trends'}
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              Hover over data points to inspect detailed telemetry breakdown and revenue metrics.
+              Hover or tap on data points to inspect detailed telemetry breakdown and revenue metrics.
             </p>
           </div>
 
-          {/* Chart View Toggle */}
-          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs">
+          {/* Chart View Toggle (Horizontal Scrollable on Mobile) */}
+          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs overflow-x-auto no-scrollbar">
             <button
               onClick={() => setChartType('generation')}
-              className={`px-3 py-1 rounded-md font-semibold transition-all ${
+              className={`px-3 py-1 rounded-md font-semibold transition-all whitespace-nowrap shrink-0 ${
                 chartType === 'generation' ? 'bg-white shadow text-indigo-600' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -1560,7 +1802,7 @@ function EnergyReportsView({ triggerToast }) {
             </button>
             <button
               onClick={() => setChartType('balance')}
-              className={`px-3 py-1 rounded-md font-semibold transition-all ${
+              className={`px-3 py-1 rounded-md font-semibold transition-all whitespace-nowrap shrink-0 ${
                 chartType === 'balance' ? 'bg-white shadow text-indigo-600' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -1568,7 +1810,7 @@ function EnergyReportsView({ triggerToast }) {
             </button>
             <button
               onClick={() => setChartType('efficiency')}
-              className={`px-3 py-1 rounded-md font-semibold transition-all ${
+              className={`px-3 py-1 rounded-md font-semibold transition-all whitespace-nowrap shrink-0 ${
                 chartType === 'efficiency' ? 'bg-white shadow text-indigo-600' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -1580,60 +1822,60 @@ function EnergyReportsView({ triggerToast }) {
         {/* Dynamic Interactive SVG Chart Area */}
         <div className="relative">
           {/* Chart Legend */}
-          <div className="flex flex-wrap items-center justify-between gap-3 text-xs mb-3 text-slate-600">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs mb-3 text-slate-600">
             {chartType === 'generation' && (
-              <div className="flex flex-wrap items-center gap-4">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                 <span className="flex items-center gap-1.5 font-medium">
-                  <span className="w-3 h-3 rounded-full bg-indigo-600"></span> Solar PV (MWh)
+                  <span className="w-2.5 h-2.5 rounded-full bg-indigo-600"></span> Solar PV (MWh)
                 </span>
                 <span className="flex items-center gap-1.5 font-medium">
-                  <span className="w-3 h-3 rounded-full bg-cyan-500"></span> Wind Turbines (MWh)
+                  <span className="w-2.5 h-2.5 rounded-full bg-cyan-500"></span> Wind Turbines (MWh)
                 </span>
                 <span className="flex items-center gap-1.5 font-medium">
-                  <span className="w-3 h-3 rounded-full bg-emerald-500"></span> BESS Battery Storage (MWh)
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> BESS Storage (MWh)
                 </span>
                 <span className="flex items-center gap-1.5 font-medium text-slate-400">
-                  <span className="w-3 h-0.5 border-t-2 border-dashed border-slate-400"></span> Target Forecast Baseline
+                  <span className="w-3 h-0.5 border-t-2 border-dashed border-slate-400"></span> Target Forecast
                 </span>
               </div>
             )}
 
             {chartType === 'balance' && (
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                 <span className="flex items-center gap-1.5 font-medium">
-                  <span className="w-3 h-3 rounded-md bg-indigo-600"></span> Total Generated
+                  <span className="w-2.5 h-2.5 rounded-md bg-indigo-600"></span> Total Generated
                 </span>
                 <span className="flex items-center gap-1.5 font-medium">
-                  <span className="w-3 h-3 rounded-md bg-slate-400"></span> Customer Demand / Consumption
+                  <span className="w-2.5 h-2.5 rounded-md bg-slate-400"></span> Demand / Consumption
                 </span>
                 <span className="flex items-center gap-1.5 font-medium text-emerald-600">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span> Net Green Energy Surplus
+                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span> Green Surplus
                 </span>
               </div>
             )}
 
             {chartType === 'efficiency' && (
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                 <span className="flex items-center gap-1.5 font-medium text-emerald-600">
-                  <span className="w-3 h-3 rounded-full bg-emerald-500"></span> Fleet Performance Ratio (PR%)
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Performance Ratio (PR%)
                 </span>
                 <span className="flex items-center gap-1.5 font-medium text-rose-500">
-                  <span className="w-3 h-0.5 border-t-2 border-dashed border-rose-400"></span> 90% SLA Benchmark Target
+                  <span className="w-3 h-0.5 border-t-2 border-dashed border-rose-400"></span> 90% SLA Target
                 </span>
               </div>
             )}
 
             {/* Hover Tooltip Ribbon */}
-            <div className="bg-slate-900 text-white px-3 py-1.5 rounded-lg shadow-md font-mono text-xs flex items-center gap-3">
+            <div className="bg-slate-900 text-white px-3 py-1.5 rounded-lg shadow-md font-mono text-[11px] sm:text-xs flex flex-wrap items-center gap-2 sm:gap-3">
               <span className="text-indigo-300 font-bold">{currentHoverItem.fullDate}:</span>
               <span>Total: <strong className="text-amber-400">{currentHoverItem.total} MWh</strong></span>
               <span>PR: <strong className="text-emerald-400">{currentHoverItem.pr}%</strong></span>
-              <span>CO₂ Saved: <strong className="text-teal-300">{currentHoverItem.co2}t</strong></span>
+              <span>CO₂: <strong className="text-teal-300">{currentHoverItem.co2}t</strong></span>
             </div>
           </div>
 
           {/* SVG Canvas */}
-          <div className="h-64 w-full relative select-none">
+          <div className="h-52 sm:h-64 w-full relative select-none">
             <svg className="w-full h-full overflow-visible" viewBox={`0 0 ${chartWidth} ${chartHeight}`}>
               <defs>
                 <linearGradient id="solarAreaGrad" x1="0" y1="0" x2="0" y2="1">
@@ -1735,6 +1977,7 @@ function EnergyReportsView({ triggerToast }) {
                         key={i}
                         className="cursor-pointer transition-all"
                         onMouseEnter={() => setHoveredIndex(i)}
+                        onTouchStart={() => setHoveredIndex(i)}
                       >
                         {isHovered && (
                           <line x1={x} y1={0} x2={x} y2={chartHeight - 25} stroke="#6366F1" strokeWidth="1.5" strokeDasharray="3 3" />
@@ -1780,6 +2023,7 @@ function EnergyReportsView({ triggerToast }) {
                         key={i}
                         className="cursor-pointer"
                         onMouseEnter={() => setHoveredIndex(i)}
+                        onTouchStart={() => setHoveredIndex(i)}
                       >
                         {/* Generation Bar (Indigo) */}
                         <rect
@@ -1894,6 +2138,7 @@ function EnergyReportsView({ triggerToast }) {
                         key={i}
                         className="cursor-pointer"
                         onMouseEnter={() => setHoveredIndex(i)}
+                        onTouchStart={() => setHoveredIndex(i)}
                       >
                         <circle
                           cx={x}
@@ -1930,7 +2175,7 @@ function EnergyReportsView({ triggerToast }) {
           </div>
 
           {/* Quick Active Metric Summary Footer */}
-          <div className="mt-4 pt-3 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs text-slate-600 font-mono">
+          <div className="mt-4 pt-3 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 text-xs text-slate-600 font-mono">
             <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
               <span className="text-[10px] text-slate-400 font-sans uppercase block">Selected Date:</span>
               <strong className="text-slate-900">{currentHoverItem.fullDate}</strong>
@@ -1952,9 +2197,9 @@ function EnergyReportsView({ triggerToast }) {
       </div>
 
       {/* TWO-COLUMN ANALYTICS GRID: Energy Mix Donut & Customer Demand */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Card 1: Renewable Energy Source Mix */}
-        <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
+        <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 shadow-sm flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
@@ -1967,9 +2212,9 @@ function EnergyReportsView({ triggerToast }) {
             </div>
 
             {/* Circular Donut & Legend Grid */}
-            <div className="flex flex-col sm:flex-row items-center gap-6 my-3">
+            <div className="flex flex-col sm:flex-row items-center gap-5 sm:gap-6 my-3">
               {/* SVG Circular Donut Chart */}
-              <div className="relative w-36 h-36 shrink-0 flex items-center justify-center">
+              <div className="relative w-32 h-32 sm:w-36 sm:h-36 shrink-0 flex items-center justify-center">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
                   {/* Background Track */}
                   <circle cx="18" cy="18" r="14" fill="none" stroke="#F1F5F9" strokeWidth="4" />
@@ -2051,14 +2296,14 @@ function EnergyReportsView({ triggerToast }) {
             </div>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+          <div className="mt-4 pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] text-slate-500">
             <span>Clean Energy Offset: <strong className="text-emerald-600 font-semibold">94% Zero-Carbon</strong></span>
             <span>Grid Curtailment: <strong className="text-slate-700 font-semibold">0.8% Minimal</strong></span>
           </div>
         </div>
 
         {/* Card 2: Customer Demand & Sector Load Breakdown */}
-        <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
+        <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 shadow-sm flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
@@ -2070,7 +2315,7 @@ function EnergyReportsView({ triggerToast }) {
               </span>
             </div>
 
-            <div className="space-y-3.5 my-2">
+            <div className="space-y-3 my-2">
               {CUSTOMER_SECTOR_CONSUMPTION.map((sec, idx) => {
                 const IconComp = sec.icon;
                 return (
@@ -2102,7 +2347,7 @@ function EnergyReportsView({ triggerToast }) {
             </div>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+          <div className="mt-4 pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] text-slate-500">
             <span>Peak Demand Time: <strong className="text-slate-800">02:30 PM (Industrial)</strong></span>
             <span>Peak Shaving Saved: <strong className="text-emerald-600 font-semibold">$3,420 this month</strong></span>
           </div>
@@ -2110,9 +2355,9 @@ function EnergyReportsView({ triggerToast }) {
       </div>
 
       {/* ESG IMPACT & FLEET RELIABILITY MATRIX */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* ESG Impact Scorecard (1 Col) */}
-        <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 text-white rounded-xl p-6 shadow-md border border-slate-800 space-y-4">
+        <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 text-white rounded-xl p-4 sm:p-6 shadow-md border border-slate-800 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Leaf className="w-5 h-5 text-emerald-400" />
@@ -2153,18 +2398,18 @@ function EnergyReportsView({ triggerToast }) {
         {/* Fleet Reliability Matrix Table (2 Cols) */}
         <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col justify-between">
           <div>
-            <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+            <div className="p-3.5 sm:p-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
               <div>
                 <h3 className="font-bold text-slate-900 text-sm">Asset Fleet Reliability & SLA Metrics</h3>
                 <p className="text-[11px] text-slate-500">Service level agreements and mean time to recovery (MTTR)</p>
               </div>
-              <span className="text-xs font-mono font-semibold bg-indigo-50 text-indigo-700 px-2 py-1 rounded">
+              <span className="text-xs font-mono font-semibold bg-indigo-50 text-indigo-700 px-2 py-1 rounded self-start sm:self-auto">
                 Overall SLA: 98.2%
               </span>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+            <div className="overflow-x-auto touch-scroll">
+              <table className="w-full text-left text-xs min-w-[550px]">
                 <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-semibold">
                   <tr>
                     <th className="p-3">Asset Fleet</th>
@@ -2255,24 +2500,24 @@ function EnergyReportsView({ triggerToast }) {
 // 9. PREDICTIVE MAINTENANCE VIEW
 function PredictiveMaintenanceView({ createAiTicket }) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-          <Wrench className="w-6 h-6 text-indigo-600" />
+        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+          <Wrench className="w-6 h-6 text-indigo-600 shrink-0" />
           <span>Predictive Maintenance Engine</span>
         </h2>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-slate-500 mt-0.5">
           AI failure probability matrix based on IoT thermal, vibration, and power factor patterns.
         </p>
       </div>
 
       {/* Risk Matrix Table */}
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
-        <div className="p-4 border-b border-slate-100">
+        <div className="p-3.5 sm:p-4 border-b border-slate-100">
           <h3 className="font-bold text-slate-900 text-sm">Asset Failure Probability Matrix</h3>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+        <div className="overflow-x-auto touch-scroll">
+          <table className="w-full text-left text-xs min-w-[640px]">
             <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-semibold">
               <tr>
                 <th className="p-3.5">Asset</th>
@@ -2335,12 +2580,12 @@ function PredictiveMaintenanceView({ createAiTicket }) {
       </div>
 
       {/* How Predictive Maintenance Works Workflow Infographic */}
-      <div className="bg-slate-900 text-white p-6 rounded-xl border border-slate-800 shadow-lg">
-        <h3 className="font-bold text-sm text-indigo-300 uppercase tracking-wider mb-4">
+      <div className="bg-slate-900 text-white p-4 sm:p-6 rounded-xl border border-slate-800 shadow-lg">
+        <h3 className="font-bold text-xs sm:text-sm text-indigo-300 uppercase tracking-wider mb-4">
           How LiveGrid Predictive AI Maintenance Operates
         </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-3 text-center">
+        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-2.5 sm:gap-3 text-center">
           <WorkflowStep step="1" title="IoT Sensors" desc="Continuous SCADA telemetry streams temperature & power output" />
           <WorkflowStep step="2" title="AI Pattern Engine" desc="Compares real-time curves against expected physics models" />
           <WorkflowStep step="3" title="Anomaly Flag" desc="Identifies thermal overheating & 23% output drop" />
@@ -2367,14 +2612,14 @@ function WorkflowStep({ step, title, desc }) {
 // 10. ARCHITECTURE & SYSTEM MODAL
 function ArchitectureModal({ onClose }) {
   return (
-    <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-slate-800 text-slate-100 rounded-xl max-w-2xl w-full p-6 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
+      <div className="bg-slate-900 border border-slate-800 text-slate-100 rounded-xl max-w-2xl w-full p-4 sm:p-6 shadow-2xl space-y-4 sm:space-y-5 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between border-b border-slate-800 pb-3">
           <div className="flex items-center gap-2">
             <Zap className="w-5 h-5 text-indigo-400" />
             <h3 className="font-bold text-base text-white">System Architecture & Data Pipeline</h3>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-white p-1">
+          <button onClick={onClose} className="text-slate-400 hover:text-white p-1 rounded-lg">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -2404,7 +2649,7 @@ function ArchitectureModal({ onClose }) {
           <div className="pt-2 border-t border-slate-800 flex justify-end">
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-lg text-xs"
+              className="w-full sm:w-auto px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-lg text-xs"
             >
               Got It, Return to Overview
             </button>
